@@ -17,6 +17,7 @@ def call(String buildStatus = 'STARTED') {
         ghstatus = 'error'
     }
 
+    GIT_URL = 'https://github.com/chetanpatel8476/Student-DynamoDB-Application.git'
     gh_api_endpoint = 'https://github.com/chetanpatel8476'
     repos = ("${GIT_URL}" =~ /.*:(.+)\.git/)[ 0 ][ 1 ]
     println "extracted repos string is ${repos}"

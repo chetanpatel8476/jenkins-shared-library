@@ -17,16 +17,16 @@ def call(String buildStatus = 'STARTED') {
         ghstatus = 'error'
     }
 
-    GIT_URL = 'https://github.com/chetanpatel8476/Student-DynamoDB-Application.git'
-    GIT_COMMIT = '5d253cd7b0b55fad0641c02431a38e5ec365af28'
+    //GIT_URL = 'https://github.com/chetanpatel8476/Student-DynamoDB-Application.git'
+    //GIT_COMMIT = '5d253cd7b0b55fad0641c02431a38e5ec365af28'
     BUILD_URL = 'https://github.com/chetanpatel8476/Student-DynamoDB-Application/commit/5d253cd7b0b55fad0641c02431a38e5ec365af28'
-    gh_api_endpoint = 'https://github.com/chetanpatel8476'
-    repos = ("${GIT_URL}" =~ /.*:(.+)\.git/)[ 0 ][ 1 ]
-    println "extracted repos string is ${repos}"
-    status_url = "${gh_api_endpoint}/repos/${repos}/statuses/${GIT_COMMIT}"
+    //gh_api_endpoint = 'https://github.com/chetanpatel8476'
+    //repos = ("${GIT_URL}" =~ /.*:(.+)\.git/)[ 0 ][ 1 ]
+    println "extracted repos string is ${BUILD_URL}"
+    //status_url = "${gh_api_endpoint}/repos/${repos}/statuses/${GIT_COMMIT}"
     msg = """
         { "state": "${ghstatus}",
         "target_url": "${BUILD_URL}" }
     """
-    httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: "${msg}", url: "${status_url}"
+    httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: "${msg}", url: "${BUILD_URL}"
 }

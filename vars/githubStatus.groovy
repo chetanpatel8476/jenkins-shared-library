@@ -28,5 +28,5 @@ def call(String buildStatus = 'STARTED') {
         { "state": "${ghstatus}",
         "target_url": "${BUILD_URL}" }
     """
-    httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: "${msg}", url: "${BUILD_URL}"
+    httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: "${msg}", url: "${BUILD_URL}", validResponseCodes: '200:404'
 }

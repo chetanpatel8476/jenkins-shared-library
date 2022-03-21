@@ -7,6 +7,11 @@ def call(String repoUrl) {
            maven 'Maven 3.5.0'
            jdk 'jdk8'
        }
+       environment {
+        AWS_ACCESS_KEY_ID = credentials('access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')       
+       }
+
        stages {
            stage("Tools initialization") {
                steps {
@@ -32,7 +37,12 @@ def call(String repoUrl) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn package -DskipTests"
+                   sh "mvn clean package -Daccess_key=${env.AWS_ACCESS_KEY_ID} -Dsecret_key=${env.AWS_SECRET_ACCESS_KEY} -DskipTests"
+               }
+           }
+           stage("Build Docker Image"){
+               steps{
+                   sh 'docker build -t chetanpatel/student-dynamodb-app:${env.BUILD_NUMBER}' .
                }
            }
        }

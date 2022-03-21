@@ -1,15 +1,17 @@
 #!/usr/bin/env groovy
 
-def call(Map pipelineparams) {
+def call(String repoUrl) {
   pipeline {
        agent any
+
        tools {
            maven 'Maven 3.5.0'
            jdk 'jdk8'
        }
+
        environment {
            AWS_ACCESS_KEY_ID = credentials('access_key_id')
-           AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')       
+           AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')
        }
 
        stages {
@@ -22,7 +24,7 @@ def call(Map pipelineparams) {
            stage("Checkout Code") {
                steps {
                    git branch: 'master',
-                       url: pipelineparams.RepoURL
+                       url: "${repoUrl}"
                }
            }
            stage("Cleaning workspace") {
@@ -37,7 +39,7 @@ def call(Map pipelineparams) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn clean package -Daccess_key=" + pipelineparams.Access_Key_ID + " -Dsecret_key=" + pipelineparams.Secret_Key_ID + " -DskipTests"
+                   sh "mvn clean package -Daccess_key=${env.AWS_ACCESS_KEY_ID} -Dsecret_key=${env.AWS_SECRET_ACCESS_KEY} -DskipTests"
                }
            }
        }

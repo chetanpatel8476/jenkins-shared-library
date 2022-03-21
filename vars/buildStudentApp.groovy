@@ -40,11 +40,6 @@ def call(String repoUrl) {
                    sh "mvn clean package -Daccess_key=${env.AWS_ACCESS_KEY_ID} -Dsecret_key=${env.AWS_SECRET_ACCESS_KEY} -DskipTests"
                }
            }
-           stage("Build Docker Image"){
-               steps{
-                   sh 'docker build -t chetanpatel/student-dynamodb-app:${env.BUILD_NUMBER}' .
-               }
-           }
        }
    }
 }

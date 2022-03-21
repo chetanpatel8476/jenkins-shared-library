@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(String repoUrl) {
+def call(Map pipelineparams) {
   pipeline {
        agent any
        tools {
@@ -22,7 +22,7 @@ def call(String repoUrl) {
            stage("Checkout Code") {
                steps {
                    git branch: 'master',
-                       url: "${repoUrl}"
+                       url: pipelineparams.RepoURL
                }
            }
            stage("Cleaning workspace") {
@@ -37,7 +37,7 @@ def call(String repoUrl) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn clean package -Daccess_key=" + env.AWS_ACCESS_KEY_ID + "-Dsecret_key=" + env.AWS_SECRET_ACCESS_KEY + "-DskipTests"
+                   sh "mvn clean package -Daccess_key=" + pipelineparams.Access_Key_ID + " -Dsecret_key=" + pipelineparams.Secret_Key_ID + " -DskipTests"
                }
            }
        }

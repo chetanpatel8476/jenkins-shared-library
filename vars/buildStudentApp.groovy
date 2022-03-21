@@ -39,7 +39,7 @@ def call(String repoUrl) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn clean package -Daccess_key=${env.AWS_ACCESS_KEY_ID} -Dsecret_key=${env.AWS_SECRET_ACCESS_KEY} -DskipTests"
+                   sh "mvn clean package -Daccess_key=env.AWS_ACCESS_KEY_ID -Dsecret_key=env.AWS_SECRET_ACCESS_KEY -DskipTests"
                }
            }
        }

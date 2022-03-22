@@ -56,12 +56,12 @@ def call(String repoUrl) {
            }
            stage('Push the docker image to Artifactory'){
                steps{
-                   rtDockerPush(
-                       serverId: "artifactory-mydevopslab",
-                       image: "$dockerImage",
-                       host: 'tcp://localhost:2375',
-                       targetRepo: 'default-docker-local'
-                   )
+                   script{
+                       def server = Artifactory.server 'artifactory-mydevopslab'
+                       def rtDocker = Artifactory.docker server: server, host: "tcp://localhost:2375"
+                       rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
+                       rtDocker.push "mydevopslab.jfrog.io/default-docker-local/$dockerImage", "default-docker-local"
+                   }
                }
            }
        }

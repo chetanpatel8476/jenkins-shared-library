@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(String repoUrl, String applicationName) {
+def call(Map pipelineParams) {
   pipeline {
        agent any
 
@@ -26,7 +26,7 @@ def call(String repoUrl, String applicationName) {
            stage("Checkout Code") {
                steps {
                    git branch: 'master',
-                       url: "${repoUrl}"
+                       url: pipelineParams.GitRepoURL
                }
            }
            stage("Cleaning workspace") {
@@ -46,18 +46,12 @@ def call(String repoUrl, String applicationName) {
            }
            stage('Build & Push the Docker Image'){
                steps{
-                   dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
-                   //script {
-                     //  dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
-                   //}
+                   dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/com.mydevopslab.hms/" + pipelineParams.ApplicationName, "$BUILD_NUMBER")
                }
            }
            stage('Push the docker image to Artifactory'){
                steps{
-                   dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
-                   //script {
-                     //  dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
-                   //}
+                   dockerPush("com.mydevopslab.hms/" + pipelineParams.ApplicationName, "$BUILD_NUMBER", "$DOCKER_REPO")
                }
            }
        }

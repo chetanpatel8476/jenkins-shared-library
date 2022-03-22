@@ -59,7 +59,7 @@ def call(String repoUrl) {
                    script{
                        def server = Artifactory.server 'artifactory-mydevopslab'
                        def rtDocker = Artifactory.docker server: server
-                       rtDocker.push 'mydevopslab.jfrog.io/devops-docker-release-local/artifactory/' + "$dockerImage", 'devops-docker-release-local'
+                       rtDocker.push 'mydevopslab.jfrog.io/devops-docker-release-local/' + "$dockerImage", 'devops-docker-release-local'
                    }
                }
            }

@@ -59,8 +59,9 @@ def call(String repoUrl) {
                    script{
                        def server = Artifactory.server 'artifactory-mydevopslab'
                        def rtDocker = Artifactory.docker server: server, host: "tcp://localhost:2375"
+                       def buildInfo = Artifactory.newBuildInfo()
                        rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
-                       rtDocker.push "$dockerImage", "mydevopslab.jfrog.io/default-docker-local"
+                       rtDocker.push "$dockerImage", "mydevopslab.jfrog.io/default-docker-local", "$buildInfo"
                    }
                }
            }

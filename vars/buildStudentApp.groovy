@@ -47,7 +47,7 @@ def call(String repoUrl) {
                steps{
                    script {
                        def dockerfile = 'Dockerfile'
-                       dockerImage = docker.build("mydevopslab.jfrog.io/chetanpatel/student-application:$BUILD_NUMBER", "-f ${dockerfile} .")
+                       dockerImage = docker.build("mydevopslab.jfrog.io/devops-docker-release-local/chetanpatel/student-application:$BUILD_NUMBER", "-f ${dockerfile} .")
                        //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
                          //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
                        //}
@@ -58,7 +58,7 @@ def call(String repoUrl) {
                steps{
                    rtDockerPush(
                        serverId: "artifactory-mydevopslab",
-                       image: "mydevopslab.jfrog.io/chetanpatel/student-application:$BUILD_NUMBER",
+                       image: "mydevopslab.jfrog.io/devops-docker-release-local/chetanpatel/student-application:$BUILD_NUMBER",
                        targetRepo: 'devops-docker-release-local'
                    )
                }

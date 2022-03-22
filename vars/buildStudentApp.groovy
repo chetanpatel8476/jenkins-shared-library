@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(String repoUrl) {
+def call(String repoUrl, String applicationName) {
   pipeline {
        agent any
 
@@ -10,6 +10,8 @@ def call(String repoUrl) {
        }
 
        environment {
+           DOCKER_REGISTRY = 'mydevopslab.jfrog.io'
+           DOCKER_REPO = 'devops-docker-release-local'
            AWS_ACCESS_KEY_ID = credentials('access_key_id')
            AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')
            dockerImage = ''
@@ -57,11 +59,12 @@ def call(String repoUrl) {
            stage('Push the docker image to Artifactory'){
                steps{
                    script {
-                       def server = Artifactory.server 'artifactory-mydevopslab'
-                       def rtDocker = Artifactory.docker server: server
-                       rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
-                       def buildInfo = rtDocker.push "mydevopslab.jfrog.io/devops-docker-release-local/chetanpatel/student-application:$BUILD_NUMBER", "devops-docker-release-local"
-                       server.publishBuildInfo buildInfo
+                       //def server = Artifactory.server 'artifactory-mydevopslab'
+                       //def rtDocker = Artifactory.docker server: server
+                       //rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
+                       //def buildInfo = rtDocker.push "mydevopslab.jfrog.io/devops-docker-release-local/chetanpatel/student-application:$BUILD_NUMBER", "devops-docker-release-local"
+                       //server.publishBuildInfo buildInfo
+                       dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
                    }
                }
            }

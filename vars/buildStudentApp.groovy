@@ -14,7 +14,6 @@ def call(String repoUrl, String applicationName) {
            DOCKER_REPO = 'devops-docker-release-local'
            AWS_ACCESS_KEY_ID = credentials('access_key_id')
            AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')
-           dockerImage = ''
        }
 
        stages {
@@ -47,26 +46,18 @@ def call(String repoUrl, String applicationName) {
            }
            stage('Build & Push the Docker Image'){
                steps{
-                   script {
-                       //def dockerfile = 'Dockerfile'
-                       //dockerImage = docker.build("mydevopslab.jfrog.io/devops-docker-release-local/com.mydevopslab.studentapp:$BUILD_NUMBER", "-f ${dockerfile} .")
-                       //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
-                         //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
-                       //}
-                       dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
-                   }
+                   dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
+                   //script {
+                     //  dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
+                   //}
                }
            }
            stage('Push the docker image to Artifactory'){
                steps{
-                   script {
-                       //def server = Artifactory.server 'artifactory-mydevopslab'
-                       //def rtDocker = Artifactory.docker server: server
-                       //rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
-                       //def buildInfo = rtDocker.push "mydevopslab.jfrog.io/devops-docker-release-local/chetanpatel/student-application:$BUILD_NUMBER", "devops-docker-release-local"
-                       //server.publishBuildInfo buildInfo
-                       dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
-                   }
+                   dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
+                   //script {
+                     //  dockerPush("$applicationName", "$BUILD_NUMBER", "$DOCKER_REPO")
+                   //}
                }
            }
        }

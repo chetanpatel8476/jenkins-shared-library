@@ -46,10 +46,22 @@ def call(String repoUrl) {
            stage('Build & Push the Docker Image'){
                steps{
                    script {
-                       withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
-                           def app = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
-                       }
+                       def dockerfile = 'Dockerfile'
+                       def dockerImage = docker.build("mydevopslab.jfrog.io/default-docker-local/student-app:$BUILD_NUMBER", "-f ${dockerfile} .")
+                       //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
+                         //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
+                       //}
                    }
+               }
+           }
+           stage('Push the docker image to Artifactory'){
+               steps{
+                   rtDockerPush(
+                       serverId: "artifactory-mydevopslab",
+                       image: "$dockerImage",
+                       host: 'tcp://localhost:2375',
+                       targetRepo: 'default-docker-local'
+                   )
                }
            }
        }

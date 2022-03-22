@@ -56,11 +56,11 @@ def call(String repoUrl) {
            }
            stage('Push the docker image to Artifactory'){
                steps{
-                   script{
-                       def server = Artifactory.server 'artifactory-mydevopslab'
-                       def rtDocker = Artifactory.docker server: server
-                       rtDocker.push 'mydevopslab.jfrog.io/devops-docker-release-local/' + "$dockerImage", 'mydevopslab.jfrog.io/devops-docker-release-local'
-                   }
+                   rtDockerPush(
+                       serverId: "artifactory-mydevopslab",
+                       image: "mydevopslab.jfrog.io/$dockerImage",
+                       targetRepo: 'devops-docker-release-local'
+                   )
                }
            }
        }

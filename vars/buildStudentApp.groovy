@@ -47,7 +47,7 @@ def call(String repoUrl) {
                steps{
                    script {
                        def dockerfile = 'Dockerfile'
-                       dockerImage = docker.build("mydevopslab.jfrog.io/default-docker-local/student-app:$BUILD_NUMBER", "-f ${dockerfile} .")
+                       dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER", "-f ${dockerfile} .")
                        //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
                          //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
                        //}
@@ -58,10 +58,8 @@ def call(String repoUrl) {
                steps{
                    script{
                        def server = Artifactory.server 'artifactory-mydevopslab'
-                       def rtDocker = Artifactory.docker server: server, host: "tcp://localhost:2375"
-                       def buildInfo = Artifactory.newBuildInfo()
-                       rtDocker.addProperty("Jenkins-build", "${BUILD_URL}".toLowerCase()).addProperty("Git-Url", "${GIT_URL}".toLowerCase())
-                       rtDocker.push "$dockerImage", "mydevopslab.jfrog.io/default-docker-local", "$buildInfo"
+                       def rtDocker = Artifactory.docker server: server
+                       rtDocker.push 'mydevopslab.jfrog.io/artifactory/' + "$dockerImage", 'devops-docker-release-local'
                    }
                }
            }

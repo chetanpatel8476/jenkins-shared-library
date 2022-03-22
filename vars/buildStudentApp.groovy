@@ -48,11 +48,12 @@ def call(String repoUrl, String applicationName) {
            stage('Build & Push the Docker Image'){
                steps{
                    script {
-                       def dockerfile = 'Dockerfile'
-                       dockerImage = docker.build("mydevopslab.jfrog.io/devops-docker-release-local/com.mydevopslab.studentapp:$BUILD_NUMBER", "-f ${dockerfile} .")
+                       //def dockerfile = 'Dockerfile'
+                       //dockerImage = docker.build("mydevopslab.jfrog.io/devops-docker-release-local/com.mydevopslab.studentapp:$BUILD_NUMBER", "-f ${dockerfile} .")
                        //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
                          //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
                        //}
+                       dockerBuild("${DOCKER_REGISTRY}/$DOCKER_REPO/$applicationName", "$BUILD_NUMBER")
                    }
                }
            }

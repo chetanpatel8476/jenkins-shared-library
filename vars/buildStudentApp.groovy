@@ -58,8 +58,8 @@ def call(String repoUrl) {
                steps{
                    rtDockerPush(
                        serverId: "artifactory-mydevopslab",
-                       image: "mydevopslab.jfrog.io/$dockerImage",
-                       targetRepo: 'devops-docker-release-local'
+                       image: "mydevopslab.jfrog.io/devops-docker-release-local/$dockerImage",
+                       targetRepo: 'docker'
                    )
                }
            }

@@ -12,6 +12,7 @@ def call(String repoUrl) {
        environment {
            AWS_ACCESS_KEY_ID = credentials('access_key_id')
            AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')
+           dockerImage = ''
        }
 
        stages {
@@ -39,7 +40,16 @@ def call(String repoUrl) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn clean package -Daccess_key=$env.AWS_ACCESS_KEY_ID -Dsecret_key=$env.AWS_SECRET_ACCESS_KEY -DskipTests"
+                   sh "mvn clean package -Daccess_key=$AWS_ACCESS_KEY_ID -Dsecret_key=$AWS_SECRET_ACCESS_KEY -DskipTests"
+               }
+           }
+           stage('Build & Push the Docker Image'){
+               steps{
+                   script {
+                       withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
+                           def app = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
+                       }
+                   }
                }
            }
        }

@@ -47,7 +47,7 @@ def call(String repoUrl) {
                steps{
                    script {
                        def dockerfile = 'Dockerfile'
-                       def dockerImage = docker.build("mydevopslab.jfrog.io/default-docker-local/student-app:$BUILD_NUMBER", "-f ${dockerfile} .")
+                       dockerImage = docker.build("mydevopslab.jfrog.io/default-docker-local/student-app:$BUILD_NUMBER", "-f ${dockerfile} .")
                        //withDockerRegistry(credentialsId: 'Docker_Creds', url: 'https://index.docker.io/v1/') {
                          //  def dockerImage = docker.build("chetanpatel/student-application:$BUILD_NUMBER",'.').push()
                        //}

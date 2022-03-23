@@ -54,7 +54,7 @@ def call(Map pipelineParams) {
            stage('Quality Gate') {
                steps {
                    script {
-                       def qualitygate = waitForQualityGate()
+                       def qualitygate = waitForQualityGate(webhookSecretId: 'sonar-webhook-secret')
                        if (qualitygate.status != "OK"){
                            echo "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
                        } else {

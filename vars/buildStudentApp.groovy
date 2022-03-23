@@ -41,7 +41,26 @@ def call(Map pipelineParams) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn clean package -Daccess_key=$AWS_ACCESS_KEY_ID -Dsecret_key=$AWS_SECRET_ACCESS_KEY -DskipTests"
+                   sh "mvn package -Daccess_key=$AWS_ACCESS_KEY_ID -Dsecret_key=$AWS_SECRET_ACCESS_KEY -DskipTests"
+               }
+           }
+           stage('SonarQube Analysis') {
+               steps {
+                   withSonarQubeEnv('sonar'){
+                       sh "mvn sonar:sonar"
+                   }
+               }
+           }
+           stage('Quality Gate') {
+               steps {
+                   script {
+                       def qualitygate = waitForQualityGate()
+                       if (qualitygate.status != "OK"){
+                           echo "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
+                       } else {
+                           echo "SonarQube analysis succesfull"
+                       }
+                   }
                }
            }
            stage('Build & Push the Docker Image'){

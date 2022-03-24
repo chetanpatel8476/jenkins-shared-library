@@ -41,7 +41,16 @@ def call(Map pipelineParams) {
            }
            stage("Packing Application") {
                steps {
-                   sh "mvn package -Daccess_key=$AWS_ACCESS_KEY_ID -Dsecret_key=$AWS_SECRET_ACCESS_KEY -DskipTests"
+                   withCredentials([[
+                       $class: 'AmazonWebServicesCredentialsBinding',
+                       credentialsId: 'AWS_Creds'
+                    ]]) {
+                        sh '''
+                           set +x
+                           mvn package -Daccess_key="$AWS_ACCESS_KEY_ID" -Dsecret_key="$AWS_SECRET_ACCESS_KEY" -DskipTests
+                        '''
+                        //sh "mvn package -Daccess_key=$AWS_ACCESS_KEY_ID -Dsecret_key=$AWS_SECRET_ACCESS_KEY -DskipTests"
+                    }
                }
            }
            stage('SonarQube Analysis') {
